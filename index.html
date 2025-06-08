@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Component Library Viewer - Functional Responsive UI</title>
+<title>Component Library Viewer - Enhanced Mobile UI</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
 <style>
   :root {
     --color-bg: #ffffff;
     --color-gray-text: #6b7280;
     --color-accent: #111827;
+    --color-accent-dark: #0f172a;
     --color-card-bg: #f9fafb;
     --color-shadow: rgba(0, 0, 0, 0.07);
     --radius: 0.75rem;
@@ -20,6 +21,16 @@
     --sidebar-width: 320px;
     --bottom-nav-height: 64px;
   }
+  /* Dark mode overrides */
+  body.dark {
+    --color-bg: #0f172a;
+    --color-gray-text: #d1d5db;
+    --color-accent: #38bdf8;
+    --color-accent-dark: #0ea5e9;
+    --color-card-bg: #1e293b;
+    --color-shadow: rgba(0, 0, 0, 0.3);
+  }
+
   *, *::before, *::after {
     box-sizing: border-box;
   }
@@ -36,6 +47,7 @@
     flex-direction: column;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   a {
     color: inherit;
@@ -84,6 +96,15 @@
   button:hover svg {
     stroke: var(--color-accent);
   }
+  /* Dark mode button hover fix */
+  body.dark button:focus,
+  body.dark button:hover {
+    background-color: #1e293b;
+  }
+  body.dark button:focus svg,
+  body.dark button:hover svg {
+    stroke: var(--color-accent);
+  }
 
   /* Top navigation */
   header.top-nav {
@@ -99,6 +120,7 @@
     padding: 0 1rem;
     user-select: none;
     gap: 1rem;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
   }
   header.top-nav .logo {
     color: var(--color-accent);
@@ -107,6 +129,7 @@
     letter-spacing: -0.02em;
     flex-shrink: 0;
   }
+  /* Hamburger for mobile */
   .hamburger-btn {
     display: none;
     background: none;
@@ -138,6 +161,12 @@
     font-weight: 600;
     color: var(--color-accent);
     background-color: #f0f6ff;
+    border-radius: var(--radius);
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+  }
+  nav.top-nav-menu button:hover, nav.top-nav-menu button:focus {
+    background-color: #e0e7ff;
   }
 
   /* Breadcrumb */
@@ -185,17 +214,17 @@
     user-select: none;
   }
 
-  /* Main container */
   #app-wrapper {
     flex-grow: 1;
     max-width: var(--max-width);
-    margin: 2rem auto;
+    margin: 2rem auto 6rem;
     width: 90vw;
     display: flex;
-    min-height: calc(100vh - var(--nav-height) - 7rem);
+    min-height: calc(100vh - var(--nav-height) - 8rem);
     overflow: hidden;
     gap: 1rem;
   }
+
   aside.sidebar {
     width: var(--sidebar-width);
     background: var(--color-bg);
@@ -232,7 +261,7 @@
   }
   li.folder-item {
     margin-bottom: 1rem;
-    padding: 0.75rem 1rem;
+    padding: 0.6rem 1rem;
     border-radius: var(--radius);
     background-color: var(--color-card-bg);
     box-shadow: 0 1px 7px var(--color-shadow);
@@ -243,15 +272,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    user-select: none;
   }
-  li.folder-item:hover {
+  li.folder-item:hover, li.folder-item:focus-visible {
     background-color: #fefefe;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.17);
+    outline: none;
   }
   ul.file-list {
     max-height: 320px;
     overflow-y: auto;
-    margin-top: 0.5rem;
+    margin-top: 0.4rem;
     padding-left: 1.25rem;
     border-left: 3px solid #e5e7eb;
     border-radius: 0 0 var(--radius) var(--radius);
@@ -259,19 +290,20 @@
     box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.06);
   }
   li.file-item {
-    margin-bottom: 0.4rem;
-    padding: 0.4rem 0.6rem;
+    margin-bottom: 0.3rem;
+    padding: 0.3rem 0.6rem;
     border-radius: 0.45rem;
     font-weight: 400;
     color: var(--color-gray-text);
     cursor: pointer;
     transition: all 0.28s ease;
   }
-  li.file-item:hover {
+  li.file-item:hover, li.file-item:focus-visible {
     color: var(--color-accent);
     background-color: #f5f7fa;
     font-weight: 600;
     padding-left: 0.8rem;
+    outline: none;
   }
   li.file-item.active {
     color: white;
@@ -279,6 +311,7 @@
     font-weight: 700;
     padding-left: 0.8rem;
   }
+
   main#app-main {
     flex-grow: 1;
     min-width: 0;
@@ -289,6 +322,7 @@
     box-shadow: 0 6px 24px var(--color-shadow);
     overflow: hidden;
   }
+
   article#markdown-preview {
     flex-grow: 1;
     padding: 2rem 3rem;
@@ -302,6 +336,7 @@
   article#markdown-preview:focus {
     outline: none;
   }
+
   section.tab-panel {
     display: none;
     flex-direction: column;
@@ -313,7 +348,6 @@
     display: flex;
   }
 
-  /* Dashboard hero & cards */
   .hero {
     max-width: 720px;
     margin-bottom: 2rem;
@@ -568,17 +602,19 @@
     flex-grow: 1;
   }
   nav.bottom-nav-menu button {
+    position: relative;
     flex-grow: 1;
     flex-shrink: 1;
     font-weight: 300;
-    font-size: 0.95rem;
+    font-size: 0;
     color: var(--color-gray-text);
     cursor: pointer;
-    padding: 0.5rem 0.6rem;
+    padding: 0.5rem 0;
     border-radius: var(--radius);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.15rem;
     white-space: nowrap;
     transition: color var(--transition), background-color var(--transition);
     user-select: none;
@@ -586,28 +622,39 @@
     border: none;
     justify-content: center;
   }
-  nav.bottom-nav-menu button[aria-current='page'],
+  nav.bottom-nav-menu button.active, /* Custom class for selected tab */
+  nav.bottom-nav-menu button[aria-selected='true'],
   nav.bottom-nav-menu button:hover,
   nav.bottom-nav-menu button:focus {
     font-weight: 600;
+    font-size: 0.95rem;
     color: var(--color-accent);
     background-color: #f0f6ff;
     outline: none;
   }
   nav.bottom-nav-menu button svg {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     stroke: var(--color-gray-text);
     stroke-width: 1.8;
     fill: none;
     transition: stroke var(--transition);
     flex-shrink: 0;
   }
-  nav.bottom-nav-menu button[aria-current='page'] svg,
+  nav.bottom-nav-menu button.active svg,
+  nav.bottom-nav-menu button[aria-selected='true'] svg,
   nav.bottom-nav-menu button:hover svg,
   nav.bottom-nav-menu button:focus svg {
     stroke: var(--color-accent);
   }
+  nav.bottom-nav-menu button .label {
+    display: none;
+    font-weight: 600;
+  }
+  nav.bottom-nav-menu button.active .label {
+    display: block;
+  }
+
   .notification-area {
     position: relative;
     display: flex;
@@ -670,11 +717,16 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     font-size: 0.9rem;
     color: var(--color-accent);
-    cursor: default;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.15s ease;
   }
   .notification-dropdown .notification-item.unread {
     font-weight: 700;
     background: #e0e7ff;
+  }
+  .notification-dropdown .notification-item:hover {
+    background-color: #cbd5e1;
   }
 
   /* Responsive */
@@ -746,17 +798,28 @@
       gap: 0.5rem;
     }
     nav.bottom-nav-menu {
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       justify-content: center;
       gap: 0.5rem;
       flex-grow: 1;
     }
     nav.bottom-nav-menu button {
-      flex: 1 1 48%;
-      font-size: 0.9rem;
+      flex: 1 1 auto;
+      font-size: 0; /* Hide label by default */
       padding: 0.55rem 0.75rem;
-      white-space: normal;
+      white-space: nowrap;
       justify-content: center;
+    }
+    nav.bottom-nav-menu button.active,
+    nav.bottom-nav-menu button[aria-selected='true'] {
+      font-size: 0.95rem; /* Show label for active */
+    }
+    nav.bottom-nav-menu button .label {
+      display: none;
+    }
+    nav.bottom-nav-menu button.active .label,
+    nav.bottom-nav-menu button[aria-selected='true'] .label {
+      display: block;
     }
     .notification-area {
       margin-left: 0.5rem;
@@ -894,16 +957,16 @@
 <footer class="bottom-nav" role="contentinfo" aria-label="Bottom navigation">
   <nav class="bottom-nav-menu" role="tablist" aria-label="Primary navigation tabs">
     <button id="btn-dashboard" aria-selected="true" aria-controls="panel-dashboard" role="tab" tabindex="0" aria-current="page" title="Dashboard" type="button">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" stroke="currentColor" role="img"><rect x="3" y="11" width="7" height="10" rx="2" ry="2"></rect><rect x="14" y="4" width="7" height="17" rx="2" ry="2"></rect></svg>Dashboard
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" stroke="currentColor" role="img"><rect x="3" y="11" width="7" height="10" rx="2" ry="2"></rect><rect x="14" y="4" width="7" height="17" rx="2" ry="2"></rect></svg><span class="label">Dashboard</span>
     </button>
     <button id="btn-browse" aria-selected="false" aria-controls="panel-browse" role="tab" tabindex="-1" title="Browse" type="button">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" stroke="currentColor" role="img"><circle cx="10.5" cy="10.5" r="7.5"></circle><line x1="21" y1="21" x2="15.8" y2="15.8"></line></svg>Browse
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" stroke="currentColor" role="img"><circle cx="10.5" cy="10.5" r="7.5"></circle><line x1="21" y1="21" x2="15.8" y2="15.8"></line></svg><span class="label">Browse</span>
     </button>
     <button id="btn-profile" aria-selected="false" aria-controls="panel-profile" role="tab" tabindex="-1" title="Profile" type="button">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" stroke="currentColor" role="img"><circle cx="12" cy="7" r="4"></circle><path d="M5.5 21a6.5 6.5 0 0 1 13 0"></path></svg>Profile
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" stroke="currentColor" role="img"><circle cx="12" cy="7" r="4"></circle><path d="M5.5 21a6.5 6.5 0 0 1 13 0"></path></svg><span class="label">Profile</span>
     </button>
     <button id="btn-settings" aria-selected="false" aria-controls="panel-settings" role="tab" tabindex="-1" title="Settings" type="button">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" stroke="currentColor" role="img"><circle cx="12" cy="12" r="3.5"></circle><path d="M19.4 15a1.8 1.8 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.8 1.8 0 0 0-1.82-.33 1.8 1.8 0 0 0-1 1.5v.15a2 2 0 0 1-4 0v-.15a1.8 1.8 0 0 0-1-1.5 1.8 1.8 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.8 1.8 0 0 0 .33-1.82 1.8 1.8 0 0 0-1.5-1h-.15a2 2 0 0 1 0-4h.15a1.8 1.8 0 0 0 1.5-1 1.8 1.8 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.8 1.8 0 0 0 1.82.33h.01a1.8 1.8 0 0 0 1-1.5v-.15a2 2 0 0 1 4 0v.15a1.8 1.8 0 0 0 1 1.5z"></path></svg>Settings
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" stroke="currentColor" role="img"><circle cx="12" cy="12" r="3.5"></circle><path d="M19.4 15a1.8 1.8 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.8 1.8 0 0 0-1.82-.33 1.8 1.8 0 0 0-1 1.5v.15a2 2 0 0 1-4 0v-.15a1.8 1.8 0 0 0-1-1.5 1.8 1.8 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.8 1.8 0 0 0 .33-1.82 1.8 1.8 0 0 0-1.5-1h-.15a2 2 0 0 1 0-4h.15a1.8 1.8 0 0 0 1.5-1 1.8 1.8 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.8 1.8 0 0 0 1.82.33h.01a1.8 1.8 0 0 0 1-1.5v-.15a2 2 0 0 1 4 0v.15a1.8 1.8 0 0 0 1 1.5z"></path></svg><span class="label">Settings</span>
     </button>
   </nav>
   <div class="notification-area" tabindex="0" aria-haspopup="true" aria-expanded="false" aria-label="Notifications">
@@ -918,7 +981,6 @@
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 (() => {
-  // Tabs references (top and bottom nav)
   const tabs = {
     dashboard: document.getElementById('panel-dashboard'),
     browse: document.getElementById('panel-browse'),
@@ -950,7 +1012,6 @@
   const sidebar = document.getElementById('sidebar-menu');
   const hamburgerBtn = document.querySelector('.hamburger-btn');
 
-  // Real public repo for demo with markdowns (Bootstrap docs)
   const GITHUB_OWNER = 'twbs';
   const GITHUB_REPO = 'bootstrap';
   const GITHUB_BRANCH = 'main';
@@ -969,28 +1030,28 @@
     { id: 3, message: 'Component library updated.', unread: false },
   ];
 
-  // Downloads sample data
   let ongoingDownloads = [
     { id: 101, file: 'component-lib-v5.3.zip', progress: 40 },
     { id: 102, file: 'docs.pdf', progress: 75 }
   ];
+
   let completedDownloads = [
     { id: 201, file: 'old-library.zip', date: '2023-09-01' },
     { id: 202, file: 'release-notes.txt', date: '2023-08-28' }
   ];
 
-  // Render ongoing & completed downloads on profile tab
+  // Helper: Render ongoing & completed downloads
   function renderDownloads() {
     ongoingDownloadsEl.innerHTML = '';
     if (ongoingDownloads.length === 0) {
       ongoingDownloadsEl.innerHTML = '<p style="font-style: italic; color: #888;">No ongoing downloads.</p>';
     } else {
-      ongoingDownloads.forEach(item => {
+      ongoingDownloads.forEach(d => {
         const div = document.createElement('div');
         div.className = 'download-item';
-        div.textContent = item.file + ' ';
+        div.textContent = d.file + ' ';
         const prog = document.createElement('progress');
-        prog.value = item.progress;
+        prog.value = d.progress;
         prog.max = 100;
         prog.style.width = '120px';
         prog.style.marginLeft = 'auto';
@@ -1002,41 +1063,44 @@
     if (completedDownloads.length === 0) {
       completedDownloadsEl.innerHTML = '<p style="font-style: italic; color: #888;">No completed downloads.</p>';
     } else {
-      completedDownloads.forEach(item => {
+      completedDownloads.forEach(d => {
         const div = document.createElement('div');
         div.className = 'download-item';
-        div.textContent = `${item.file} (Completed on ${item.date})`;
+        div.textContent = `${d.file} (Completed on ${d.date})`;
         completedDownloadsEl.appendChild(div);
       });
     }
   }
 
+  // Set active tab and sync all nav buttons
   function setActiveTab(tabId) {
     if (!tabs[tabId]) return;
     currentTab = tabId;
-    Object.entries(tabs).forEach(([key, panel]) => {
-      const isActive = key === tabId;
+    Object.entries(tabs).forEach(([k, panel]) => {
+      const isActive = k === tabId;
       panel.classList.toggle('active', isActive);
       panel.setAttribute('aria-hidden', !isActive);
-      navButtonsTop[key].setAttribute('aria-selected', isActive);
-      navButtonsTop[key].tabIndex = isActive ? 0 : -1;
-      navButtonsBottom[key].setAttribute('aria-selected', isActive);
-      navButtonsBottom[key].tabIndex = isActive ? 0 : -1;
+      navButtonsTop[k].setAttribute('aria-selected', isActive);
+      navButtonsTop[k].tabIndex = isActive ? 0 : -1;
+      navButtonsBottom[k].setAttribute('aria-selected', isActive);
+      navButtonsBottom[k].tabIndex = isActive ? 0 : -1;
       if (isActive) {
-        navButtonsTop[key].setAttribute('aria-current', 'page');
-        navButtonsBottom[key].setAttribute('aria-current', 'page');
+        navButtonsTop[k].classList.add('active');
+        navButtonsBottom[k].classList.add('active');
+        navButtonsTop[k].setAttribute('aria-current', 'page');
+        navButtonsBottom[k].setAttribute('aria-current', 'page');
       } else {
-        navButtonsTop[key].removeAttribute('aria-current');
-        navButtonsBottom[key].removeAttribute('aria-current');
+        navButtonsTop[k].classList.remove('active');
+        navButtonsBottom[k].classList.remove('active');
+        navButtonsTop[k].removeAttribute('aria-current');
+        navButtonsBottom[k].removeAttribute('aria-current');
       }
     });
     updateBreadcrumb();
+
     if (tabId === 'browse') {
       loadBrowseFolder(currentPath);
-      // Show sidebar by default on wide screens, hide on mobile
-      if(window.innerWidth >= 900){
-        sidebar.classList.remove('hidden');
-      }
+      if (window.innerWidth >= 900) sidebar.classList.remove('hidden');
     } else {
       clearBrowseSelection();
       markdownPreview.innerHTML = '<p>Select a Markdown file from the folders to preview its content here.</p>';
@@ -1047,9 +1111,9 @@
       renderDownloads();
     }
     if(tabId === 'settings'){
-      // Load settings from localStorage
       document.getElementById('setting-darkmode').checked = localStorage.getItem('darkModeEnabled') === 'true';
       document.getElementById('setting-notifications').checked = localStorage.getItem('emailNotifications') !== 'false';
+      applyDarkMode(document.getElementById('setting-darkmode').checked);
     }
   }
 
@@ -1074,7 +1138,7 @@
       const btn = document.createElement('button');
       btn.textContent = crumb.name;
       btn.addEventListener('click', () => {
-        const path = breadcrumbStack.slice(0, i + 1).map((c) => c.name).join('/');
+        const path = breadcrumbStack.slice(0, i + 1).map(c => c.name).join('/');
         currentPath = path;
         breadcrumbStack = breadcrumbStack.slice(0, i + 1);
         currentFilePath = '';
@@ -1094,30 +1158,84 @@
     const res = await fetch(url);
     if (!res.ok) throw new Error('Error fetching folder contents');
     const data = await res.json();
-    return data.filter((item) => item.type === 'dir' || item.type === 'file');
+    return data.filter(item => item.type === 'dir' || item.type === 'file');
   }
 
   function createFolderItem(name, path) {
     const li = document.createElement('li');
     li.className = 'folder-item';
-    li.textContent = name;
     li.tabIndex = 0;
     li.setAttribute('role', 'treeitem');
-    li.addEventListener('click', () => {
-      breadcrumbStack.push({ name, pathSegment: name });
-      currentPath = path;
-      currentFilePath = '';
-      loadBrowseFolder(path);
+    li.style.display = 'flex';
+    li.style.justifyContent = 'space-between';
+    li.style.alignItems = 'center';
+
+    // Folder label with arrow icon
+    const labelSpan = document.createElement('span');
+    labelSpan.textContent = name;
+    labelSpan.style.flex = '1';
+    li.appendChild(labelSpan);
+
+    // Expand/collapse arrow
+    const arrow = document.createElement('span');
+    arrow.innerHTML = '▶';
+    arrow.style.transition = 'transform 0.3s ease';
+    arrow.style.marginLeft = '0.5rem';
+    arrow.style.userSelect = 'none';
+    li.appendChild(arrow);
+
+    // Folder's file list container (empty initially)
+    let childList = null;
+    let isExpanded = false;
+
+    async function toggleExpand() {
+      if (isExpanded) {
+        // Collapse
+        if (childList) li.removeChild(childList);
+        arrow.style.transform = '';
+        isExpanded = false;
+        return;
+      }
+      // Expand and fetch folder contents if not loaded
+      if (!childList) {
+        childList = document.createElement('ul');
+        childList.className = 'file-list';
+        li.appendChild(childList);
+        childList.innerHTML = '<li style="font-style: italic; color: var(--color-gray-text);">Loading...</li>';
+        try {
+          const contents = await fetchFolderContents(path);
+          childList.innerHTML = '';
+          if (contents.length === 0) {
+            childList.innerHTML = '<li style="font-style: italic; color: var(--color-gray-text);">Empty folder.</li>';
+          } else {
+            const folders = contents.filter(i => i.type === 'dir').sort((a,b) => a.name.localeCompare(b.name));
+            const files = contents.filter(i => i.type === 'file' && i.name.toLowerCase().endsWith('.md')).sort((a,b) => a.name.localeCompare(b.name));
+            folders.forEach(f => childList.appendChild(createFolderItem(f.name, f.path)));
+            files.forEach(f => childList.appendChild(createFileItem(f.name, f.path)));
+          }
+        } catch {
+          childList.innerHTML = '<li style="color:red;">Failed to load contents.</li>';
+        }
+      } else {
+        li.appendChild(childList);
+      }
+      arrow.style.transform = 'rotate(90deg)';
+      isExpanded = true;
+    }
+
+    li.addEventListener('click', (e) => {
+      if(e.target === arrow || e.target === labelSpan || e.target === li) {
+        e.stopPropagation();
+        toggleExpand();
+      }
     });
     li.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        breadcrumbStack.push({ name, pathSegment: name });
-        currentPath = path;
-        currentFilePath = '';
-        loadBrowseFolder(path);
+        toggleExpand();
       }
     });
+
     return li;
   }
 
@@ -1210,41 +1328,71 @@
     }
   });
 
+  // Render notifications list with dismiss functionality
   function renderNotifications() {
     notificationDropdown.innerHTML = '';
-    notificationsList.forEach((notif) => {
+    notificationsList.forEach((notif, index) => {
       const div = document.createElement('div');
       div.className = 'notification-item';
       if (notif.unread) div.classList.add('unread');
+      div.tabIndex = 0;
       div.textContent = notif.message;
+      // Allow dismiss on click or keyboard
+      div.addEventListener('click', () => dismissNotification(index));
+      div.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          dismissNotification(index);
+        }
+      });
       notificationDropdown.appendChild(div);
     });
-    const unreadCount = notificationsList.filter((n) => n.unread).length;
-    if (unreadCount) {
+    updateNotificationBadge();
+  }
+
+  function updateNotificationBadge() {
+    const unreadCount = notificationsList.filter(n => n.unread).length;
+    if(unreadCount > 0) {
       notificationBadge.textContent = unreadCount;
       notificationBadge.style.display = 'flex';
     } else {
       notificationBadge.style.display = 'none';
     }
   }
+  function dismissNotification(index) {
+    notificationsList[index].unread = false;
+    renderNotifications();
+  }
+
   renderNotifications();
 
-  // Tab nav handlers for top and bottom navs
+  // Simulated real-time notifications: push new message every 20 seconds (demo)
+  setInterval(() => {
+    const newNotif = { 
+      id: Date.now(), 
+      message: `Auto update at ${new Date().toLocaleTimeString()}`, 
+      unread: true 
+    };
+    notificationsList.unshift(newNotif);
+    renderNotifications();
+  }, 20000);
+
+  function applyDarkMode(enabled) {
+    if(enabled) document.body.classList.add('dark');
+    else document.body.classList.remove('dark');
+  }
+
+  // Tab nav click handlers for top and bottom
   function onTabClick(tabId) {
-    if (tabId === currentTab) return;
+    if(tabId === currentTab) return;
     setActiveTab(tabId);
-    // On mobile close sidebar when tab changes
     if(window.innerWidth < 900) {
       sidebar.classList.add('hidden');
       hamburgerBtn.setAttribute('aria-expanded', 'false');
     }
   }
-  Object.entries(navButtonsTop).forEach(([key, btn]) => {
-    btn.addEventListener('click', () => onTabClick(key));
-  });
-  Object.entries(navButtonsBottom).forEach(([key, btn]) => {
-    btn.addEventListener('click', () => onTabClick(key));
-  });
+  Object.entries(navButtonsTop).forEach(([key, btn]) => btn.addEventListener('click', () => onTabClick(key)));
+  Object.entries(navButtonsBottom).forEach(([key, btn]) => btn.addEventListener('click', () => onTabClick(key)));
 
   // Profile Save
   document.getElementById('save-profile').addEventListener('click', () => {
@@ -1258,7 +1406,13 @@
     const emailNotifications = document.getElementById('setting-notifications').checked;
     localStorage.setItem('darkModeEnabled', darkModeEnabled);
     localStorage.setItem('emailNotifications', emailNotifications);
+    applyDarkMode(darkModeEnabled);
     alert('Settings saved!');
+  });
+
+  // Watch settings toggles for live effect (dark mode)
+  document.getElementById('setting-darkmode').addEventListener('change', e => {
+    applyDarkMode(e.target.checked);
   });
 
   // Clear browse selection when leaving browse tab
@@ -1273,15 +1427,15 @@
     updateBreadcrumb();
   }
 
-  // Sidebar toggle logic
+  // Sidebar toggle
   hamburgerBtn.addEventListener('click', () => {
     const expanded = hamburgerBtn.getAttribute('aria-expanded') === 'true';
     hamburgerBtn.setAttribute('aria-expanded', String(!expanded));
     sidebar.classList.toggle('hidden');
   });
 
-  // Close sidebar when clicking outside on mobile
-  document.addEventListener('click', (e) => {
+  // Close sidebar on outside click
+  document.addEventListener('click', e => {
     if (!sidebar.contains(e.target) && !hamburgerBtn.contains(e.target) && !sidebar.classList.contains('hidden')) {
       sidebar.classList.add('hidden');
       hamburgerBtn.setAttribute('aria-expanded', 'false');
@@ -1297,11 +1451,7 @@
     }
   });
 
-  // Initialize page on load
-  setActiveTab('dashboard');
-  loadBrowseFolder('');
-
-  // Responsive: Show sidebar by default on wide screens
+  // Responsive sidebar show on resize
   window.addEventListener('resize', () => {
     if(window.innerWidth >= 900) {
       sidebar.classList.remove('hidden');
@@ -1310,6 +1460,16 @@
       sidebar.classList.add('hidden');
     }
   });
+
+  // Load last used preferences on load
+  window.addEventListener('load', () => {
+    applyDarkMode(localStorage.getItem('darkModeEnabled') === 'true');
+  });
+
+  // Initialize
+  setActiveTab('dashboard');
+  loadBrowseFolder('');
+
 })();
 </script>
 </body>
